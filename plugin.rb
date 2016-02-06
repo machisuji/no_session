@@ -7,11 +7,18 @@ after_initialize do
   module NOSession
     def set_current_user_for_logs
       super
-      cookies[:no_session] = {
-        value: "#{current_user.id}:#{current_user.no_session_salt}",
-        domain: String(ENV['DISCOURSE_HOSTNAME']).scan(/^.+?\.(.+)/).flatten.last,
-        secure: true
-      }
+
+      domain = String(ENV['DISCOURSE_HOSTNAME']).scan(/^.+?\.(.+)/).flatten.last
+
+      if current_user
+        cookies[:no_session] = {
+          value: "#{current_user.id}:#{current_user.no_session_salt}",
+          domain: domain,
+          secure: true
+        }
+      else
+        cookies.delete :no_session, domain: domain, secure: true
+      end
     end
   end
 
