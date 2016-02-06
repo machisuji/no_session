@@ -9,7 +9,7 @@ after_initialize do
       super
       cookies[:no_session] = {
         value: "#{current_user.id}:#{current_user.no_session_salt}",
-        domain: String(ENV['DISCOURSE_HOSTNAME']).scan(/^.+?\.(.+)/).flatten.last
+        domain: String(ENV['DISCOURSE_HOSTNAME']).scan(/^.+?\.(.+)/).flatten.last,
         secure: true
       }
     end
