@@ -13,11 +13,10 @@ after_initialize do
       if current_user
         cookies[:no_session] = {
           value: "#{current_user.id}:#{current_user.no_session_salt}",
-          domain: domain,
-          secure: true
+          domain: domain
         }
       else
-        cookies.delete :no_session, domain: domain, secure: true
+        cookies.delete :no_session, domain: domain
       end
     end
   end
