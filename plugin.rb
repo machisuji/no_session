@@ -5,18 +5,20 @@
 
 after_initialize do
   module NOSession
+    def self.domain
+      @domain ||= String(ENV['DISCOURSE_HOSTNAME']).scan(/^.+?\.(.+)/).flatten.last
+    end
+
     def set_current_user_for_logs
       super
-
-      domain = String(ENV['DISCOURSE_HOSTNAME']).scan(/^.+?\.(.+)/).flatten.last
 
       if current_user
         cookies[:no_session] = {
           value: "#{current_user.id}:#{current_user.no_session_salt}",
-          domain: domain
+          domain: NOSession.domain
         }
       elsif cookies.include? :no_session
-        cookies.delete :no_session, domain: domain
+        cookies.delete :no_session, domain: NOSession.domain
       end
     end
   end
