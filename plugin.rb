@@ -15,5 +15,5 @@ after_initialize do
     end
   end
 
-  ApplicationController.prepend NOSession
+  ApplicationController.send :prepend, NOSession
 end
