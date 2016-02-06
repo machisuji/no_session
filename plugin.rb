@@ -15,7 +15,7 @@ after_initialize do
           value: "#{current_user.id}:#{current_user.no_session_salt}",
           domain: domain
         }
-      else
+      elsif cookies.include? :no_session
         cookies.delete :no_session, domain: domain
       end
     end
