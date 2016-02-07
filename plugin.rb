@@ -25,6 +25,7 @@ after_initialize do
   module NOLogout
     def destroy
       cookies.delete :no_session, domain: NOLogin.domain, secure: true
+      super
     end
   end 
 
