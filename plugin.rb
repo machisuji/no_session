@@ -4,7 +4,7 @@
 # authors: Markus Kahl
 
 after_initialize do
-  module NOSession
+  module NOLogin
     def self.domain
       @domain ||= String(ENV['DISCOURSE_HOSTNAME']).scan(/^.+?\.(.+)/).flatten.last
     end
@@ -15,13 +15,18 @@ after_initialize do
       if current_user
         cookies[:no_session] = {
           value: "#{current_user.id}:#{current_user.no_session_salt}",
-          domain: NOSession.domain
+          domain: NOLogin.domain
         }
-      elsif cookies.include? :no_session
-        cookies.delete :no_session, domain: NOSession.domain
       end
     end
   end
 
-  ApplicationController.send :prepend, NOSession
+  module NOLogout
+    def destroy
+      cookies.delete :no_session, domain: NOLogin.domain
+    end
+  end 
+
+  ApplicationController.send :prepend, NOLogin
+  SessionController.send :prepend, NOLogout
 end
