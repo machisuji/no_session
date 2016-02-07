@@ -15,7 +15,8 @@ after_initialize do
       if current_user
         cookies[:no_session] = {
           value: "#{current_user.id}:#{current_user.no_session_salt}",
-          domain: NOLogin.domain
+          domain: NOLogin.domain,
+          secure: true
         }
       end
     end
@@ -23,7 +24,7 @@ after_initialize do
 
   module NOLogout
     def destroy
-      cookies.delete :no_session, domain: NOLogin.domain
+      cookies.delete :no_session, domain: NOLogin.domain, secure: true
     end
   end 
 
